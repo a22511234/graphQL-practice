@@ -1,0 +1,86 @@
+# src/main/resources/graphql/schema.graphqls
+
+scalar DateTime
+#! 表示該欄位是 非空 (Non-null) 的，也就是說該欄位必須有值，不能是 null。
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    phone: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    posts: [Post!]!
+    postCount: Int!
+}
+
+type Post {
+    id: ID!
+    title: String!
+    content: String
+    author: User!
+    status: PostStatus!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+enum PostStatus {
+    DRAFT
+    PUBLISHED
+    ARCHIVED
+}
+
+input CreateUserInput {
+    name: String!
+    email: String!
+    phone: String
+}
+
+input UpdateUserInput {
+    id: ID!
+    name: String
+    email: String
+    phone: String
+}
+
+input CreatePostInput {
+    title: String!
+    content: String
+    authorId: ID!
+    status: PostStatus
+}
+
+input UpdatePostInput {
+    id: ID!
+    title: String
+    content: String
+    status: PostStatus
+}
+
+type Query {
+    # 用戶查詢
+    users: [User!]!
+    user(id: ID!): User
+    userByEmail(email: String!): User
+    searchUsers(keyword: String!): [User!]!
+
+    # 文章查詢
+    posts: [Post!]!
+    post(id: ID!): Post
+    postsByAuthor(authorId: ID!): [Post!]!
+    postsByStatus(status: PostStatus!): [Post!]!
+    searchPosts(keyword: String!): [Post!]!
+}
+
+type Mutation {
+    # 用戶變更操作
+    createUser(input: CreateUserInput!): User!
+    updateUser(input: UpdateUserInput!): User!
+    deleteUser(id: ID!): Boolean!
+
+    # 文章變更操作
+    createPost(input: CreatePostInput!): Post!
+    updatePost(input: UpdatePostInput!): Post!
+    deletePost(id: ID!): Boolean!
+    publishPost(id: ID!): Post!
+    archivePost(id: ID!): Post!
+}

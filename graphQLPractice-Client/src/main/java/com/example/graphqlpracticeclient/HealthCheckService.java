@@ -1,0 +1,51 @@
+package com.example.graphqlpracticeclient;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import java.time.Duration;
+import java.util.Map;
+
+@Service
+public class HealthCheckService {
+
+    @Autowired(required = true)
+    private WebClient webClient;
+
+    /**
+     * 檢查 GraphQL 服務端是否可用
+     */
+    public Mono<Boolean> checkGraphQLServerHealth() {
+        return webClient
+                .get()
+                .uri("/actuator/health") // Spring Boot Actuator 健康檢查端點
+                .retrieve()
+                .bodyToMono(Map.class)
+                .map(response -> "UP".equals(response.get("status")))
+                .timeout(Duration.ofSeconds(5))
+                .onErrorReturn(false);
+    }
+
+    /**
+     * 測試 GraphQL 連線
+     */
+    public Mono<Boolean> testGraphQLConnection() {
+        String testQuery = """
+                {
+                    "query": "{ __schema { queryType { name } } }"
+                }
+                """;
+
+        return webClient
+                .post()
+                .uri("/graphql")
+                .bodyValue(testQuery)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .map(response -> response.containsKey("data"))
+                .timeout(Duration.ofSeconds(10))
+                .onErrorReturn(false);
+    }
+}

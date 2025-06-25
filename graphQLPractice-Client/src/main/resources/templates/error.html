@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>錯誤 - GraphQL Client</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 70px;
+        }
+    </style>
+</head>
+<body>
+<!-- 導航欄 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="/web">
+            <i class="fas fa-exclamation-triangle"></i> GraphQL Client - 錯誤
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/web">
+                <i class="fas fa-home"></i> 返回首頁
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4><i class="fas fa-exclamation-circle"></i> 發生錯誤</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" role="alert">
+                        <h5>錯誤詳情:</h5>
+                        <p th:text="${error ?: '未知錯誤'}">錯誤訊息</p>
+                    </div>
+
+                    <h6>可能的解決方案:</h6>
+                    <ul>
+                        <li>檢查 GraphQL 服務端是否正在運行 (http://127.0.0.1:8080)</li>
+                        <li>確認網路連線正常</li>
+                        <li>查看服務端日誌是否有錯誤</li>
+                        <li>重新啟動客戶端和服務端</li>
+                    </ul>
+
+                    <div class="mt-4">
+                        <a href="/web" class="btn btn-primary">
+                            <i class="fas fa-home"></i> 返回首頁
+                        </a>
+                        <a href="/diagnostic/connection" class="btn btn-warning" target="_blank">
+                            <i class="fas fa-stethoscope"></i> 連線診斷
+                        </a>
+                        <a href="/api/health" class="btn btn-info" target="_blank">
+                            <i class="fas fa-heartbeat"></i> 健康檢查
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

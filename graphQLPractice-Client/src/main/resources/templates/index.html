@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphQL Client</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 70px;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .status-draft {
+            color: #6c757d;
+        }
+
+        .status-published {
+            color: #198754;
+        }
+
+        .status-archived {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<!-- 導航欄 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="/web">
+            <i class="fas fa-network-wired"></i> GraphQL Client
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/web">
+                        <i class="fas fa-home"></i> 首頁
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/web/users">
+                        <i class="fas fa-users"></i> 用戶管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/web/posts">
+                        <i class="fas fa-file-alt"></i> 文章管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/web/dashboard">
+                        <i class="fas fa-chart-bar"></i> 統計儀表板
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/api/health">
+                        <i class="fas fa-heartbeat"></i> 健康檢查
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 主要內容 -->
+<div class="container">
+    <!-- 訊息提示 -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- 頁面內容 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-light p-5 rounded mb-4">
+                <h1 class="display-4">
+                    <i class="fas fa-network-wired text-primary"></i>
+                    歡迎使用 GraphQL Client
+                </h1>
+                <p class="lead">
+                    這是一個使用 Spring Boot 建立的 GraphQL 客戶端應用程式，
+                    可以與 GraphQL 服務端進行完整的資料交互操作。
+                </p>
+                <hr class="my-4">
+                <p>您可以通過以下功能來管理用戶和文章資料：</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-users text-info"></i> 用戶管理
+                    </h5>
+                    <p class="card-text">
+                        創建、查詢、更新和刪除用戶資料。支援關鍵字搜尋和詳細資訊檢視。
+                    </p>
+                    <a href="/web/users" class="btn btn-info">
+                        <i class="fas fa-arrow-right"></i> 進入用戶管理
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-file-alt text-success"></i> 文章管理
+                    </h5>
+                    <p class="card-text">
+                        管理文章內容，支援草稿、發布、歸檔等狀態管理功能。
+                    </p>
+                    <a href="/web/posts" class="btn btn-success">
+                        <i class="fas fa-arrow-right"></i> 進入文章管理
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-chart-bar fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">統計儀表板</h5>
+                    <p class="card-text">查看系統整體統計資訊和資料分析。</p>
+                    <a href="/web/dashboard" class="btn btn-warning">查看統計</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-code fa-3x text-danger mb-3"></i>
+                    <h5 class="card-title">API 測試</h5>
+                    <p class="card-text">測試各種 GraphQL API 端點和功能。</p>
+                    <a href="/api/users" class="btn btn-danger">開始測試</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-server fa-3x text-secondary mb-3"></i>
+                    <h5 class="card-title">服務狀態</h5>
+                    <p class="card-text">檢查 GraphQL 服務端連線狀態。</p>
+                    <a href="/diagnostic/connection" target="_blank" class="btn btn-secondary">連線診斷</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API 快速測試區 -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-rocket"></i> 快速 API 測試</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-users"></i> 用戶 API</h6>
+                            <div class="d-grid gap-2">
+                                <a href="/api/users" class="btn btn-outline-primary btn-sm">
+                                    GET /api/users - 取得所有用戶
+                                </a>
+                                <a href="/api/users/search?keyword=張" class="btn btn-outline-primary btn-sm">
+                                    GET /api/users/search - 搜尋用戶
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-file-alt"></i> 文章 API</h6>
+                            <div class="d-grid gap-2">
+                                <a href="/api/posts" class="btn btn-outline-success btn-sm">
+                                    GET /api/posts - 取得所有文章
+                                </a>
+                                <a href="/api/posts/status/PUBLISHED" class="btn btn-outline-success btn-sm">
+                                    GET /api/posts/status/PUBLISHED - 已發布文章
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
