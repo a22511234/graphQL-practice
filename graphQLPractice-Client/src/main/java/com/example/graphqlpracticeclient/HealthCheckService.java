@@ -1,6 +1,7 @@
 package com.example.graphqlpracticeclient;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -13,6 +14,8 @@ public class HealthCheckService {
 
     @Autowired(required = true)
     private WebClient webClient;
+    @Autowired
+    private HttpGraphQlClient graphQlClient;
 
     /**
      * 檢查 GraphQL 服務端是否可用
@@ -38,13 +41,11 @@ public class HealthCheckService {
                 }
                 """;
 
-        return webClient
-                .post()
-                .uri("/graphql")
-                .bodyValue(testQuery)
-                .retrieve()
-                .bodyToMono(Map.class)
-                .map(response -> response.containsKey("data"))
+        return graphQlClient
+                .document(testQuery)
+                .retrieve("__schema")      // 指定要取得的欄位名稱
+                .toEntity(Map.class)       // 轉成 Map 來解析
+                .map(response -> response != null && !response.isEmpty())
                 .timeout(Duration.ofSeconds(10))
                 .onErrorReturn(false);
     }
