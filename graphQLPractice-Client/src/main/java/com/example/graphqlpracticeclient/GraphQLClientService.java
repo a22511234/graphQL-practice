@@ -25,6 +25,7 @@ public class GraphQLClientService {
      * 取得所有用戶
      */
     public Mono<List<UserDTO>> getAllUsers() {
+
         return graphQlClient
                 .document(GraphQLQueries.GET_ALL_USERS)
                 .retrieve("users")
@@ -37,10 +38,30 @@ public class GraphQLClientService {
      * 根據 ID 取得用戶
      */
     public Mono<UserDTO> getUserById(String id) {
+        String query = """
+                query($id: ID!) {
+                    user(id: $id) {
+                        id
+                        name
+                        email
+                        phone
+                        createdAt
+                        updatedAt
+                        postCount
+                        posts {
+                            id
+                            title
+                            content
+                            status
+                            createdAt
+                        }
+                    }
+                }
+                """;
         Map<String, Object> variables = Map.of("id", id);
 
         return graphQlClient
-                .document(GraphQLQueries.GET_USER_BY_ID)
+                .document(query)
                 .variables(variables)
                 .retrieve("user")
                 .toEntity(UserDTO.class)

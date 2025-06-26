@@ -1,0 +1,123 @@
+{
+  "meta": {
+    "schemaVersion": "v5"
+  },
+  "data": {
+    "pairs": [
+      {
+        "request": {
+          "method": [
+            {
+              "matcher": "exact",
+              "value": "POST"
+            }
+          ],
+          "path": [
+            {
+              "matcher": "exact",
+              "value": "/graphql"
+            }
+          ],
+          "body": [
+            {
+              "matcher": "json",
+              "value": {
+                "query": "query($id: ID!) { user(id: $id) { id name email phone createdAt updatedAt postCount posts { id title content status createdAt } } }",
+                "variables": {
+                  "id": "1"
+                }
+              }
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"data\":{\"user\":{\"id\":\"1\",\"name\":\"Test User\",\"email\":\"test@example.com\",\"phone\":\"123456789\",\"createdAt\":\"2023-01-01T00:00:00Z\",\"updatedAt\":\"2023-01-02T00:00:00Z\",\"postCount\":5,\"posts\":[{\"id\":\"101\",\"title\":\"Post 1\",\"content\":\"Content 1\",\"status\":\"PUBLISHED\",\"createdAt\":\"2023-01-01T10:00:00Z\"}]}}}",
+          "headers": {
+            "Content-Type": [
+              "application/json"
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "method": [
+            {
+              "matcher": "exact",
+              "value": "POST"
+            }
+          ],
+          "path": [
+            {
+              "matcher": "exact",
+              "value": "/graphql"
+            }
+          ],
+          "body": [
+            {
+              "matcher": "json",
+              "value": {
+                "query": "query($email: String!) { userByEmail(email: $email) { id name email phone createdAt postCount } }",
+                "variables": {
+                  "email": "test@example.com"
+                }
+              }
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"data\":{\"userByEmail\":{\"id\":\"1\",\"name\":\"Test User\",\"email\":\"test@example.com\",\"phone\":\"123456789\",\"createdAt\":\"2023-01-01T00:00:00Z\",\"postCount\":5}}}",
+          "headers": {
+            "Content-Type": [
+              "application/json"
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "method": [
+            {
+              "matcher": "exact",
+              "value": "POST"
+            }
+          ],
+          "path": [
+            {
+              "matcher": "exact",
+              "value": "/graphql"
+            }
+          ],
+          "body": [
+            {
+              "matcher": "json",
+              "value": {
+                "query": "mutation($input: CreateUserInput!) { createUser(input: $input) { id name email phone createdAt } }",
+                "variables": {
+                  "input": {
+                    "name": "New User",
+                    "email": "newuser@example.com",
+                    "phone": "987654321"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"data\":{\"createUser\":{\"id\":\"2\",\"name\":\"New User\",\"email\":\"newuser@example.com\",\"phone\":\"987654321\",\"createdAt\":\"2023-01-03T00:00:00Z\"}}}",
+          "headers": {
+            "Content-Type": [
+              "application/json"
+            ]
+          }
+        }
+      }
+    ],
+    "globalActions": {},
+    "responseDelays": []
+  }
+}
