@@ -3,10 +3,9 @@ package com.example.graphqlpracticeclient;
 import com.example.graphqlpracticeclient.DTO.CreateUserInputDTO;
 import com.example.graphqlpracticeclient.DTO.UserDTO;
 import io.specto.hoverfly.junit.core.Hoverfly;
-import io.specto.hoverfly.junit.core.HoverflyMode;
 import io.specto.hoverfly.junit5.HoverflyExtension;
+import io.specto.hoverfly.junit5.api.HoverflyCapture;
 import io.specto.hoverfly.junit5.api.HoverflyConfig;
-import io.specto.hoverfly.junit5.api.HoverflyCore;
 import io.specto.hoverfly.junit5.api.HoverflySimulate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,14 +18,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(HoverflyExtension.class)
-@HoverflySimulate(source = @HoverflySimulate.Source(value = "test-service-https.json"), config = @HoverflyConfig(proxyLocalHost = true, proxyPort = 8090, destination = "localhost:8090"))
+//@HoverflySimulate(source = @HoverflySimulate.Source(value = "test-service-https.json"), config = @HoverflyConfig(proxyLocalHost = true, proxyPort = 8080, destination = "localhost:8080"))
+@HoverflyCapture(path = "resources/test/hoverfly",
+        filename = "captured-simulations.json",
+        config = @HoverflyConfig(captureAllHeaders = true, proxyLocalHost = true))
 public class GraphQLClientServiceTest2 {
     private GraphQLClientService graphQLClientService;
 
     @BeforeEach
     void setup(Hoverfly hoverfly) {
         HttpGraphQlClient client = HttpGraphQlClient.builder()
-                .url("http://localhost:8090/graphql") // 使用 hoverflyInfo.getProxyPort()
+                .url("http://localhost:8080/graphql") // 使用 hoverflyInfo.getProxyPort()
                 .build();
 
         graphQLClientService = new GraphQLClientService();
@@ -35,11 +37,11 @@ public class GraphQLClientServiceTest2 {
 
     @Test
     void testGetUserById() {
-        UserDTO user = graphQLClientService.getUserById("1").block(); // 等待結果出來
+        UserDTO user = graphQLClientService.getUserById("2").block(); // 等待結果出來
 
         assertNotNull(user);
-        assertEquals("1", user.getId());
-        assertEquals("test@example.com", user.getEmail());
+        assertEquals("2", user.getId());
+        assertEquals("hua@example.com", user.getEmail());
         ;
     }
 

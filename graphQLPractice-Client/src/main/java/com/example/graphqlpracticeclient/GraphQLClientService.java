@@ -1,6 +1,5 @@
 package com.example.graphqlpracticeclient;
 
-import io.specto.hoverfly.junit.core.Hoverfly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import com.example.graphqlpracticeclient.DTO.UserDTO;
@@ -10,13 +9,9 @@ import com.example.graphqlpracticeclient.DTO.CreateUserInputDTO;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static io.specto.hoverfly.junit.core.HoverflyConfig.localConfigs;
-import static io.specto.hoverfly.junit.core.HoverflyMode.CAPTURE;
 
 @Service
 public class GraphQLClientService {
@@ -64,20 +59,6 @@ public class GraphQLClientService {
                 }
                 """;
         Map<String, Object> variables = Map.of("id", id);
-        try (Hoverfly hoverfly = new Hoverfly(localConfigs(), CAPTURE)) {
-
-            hoverfly.start();
-
-            graphQlClient
-                    .document(query)
-                    .variables(variables)
-                    .retrieve("user")
-                    .toEntity(UserDTO.class)
-                    .doOnNext(user -> System.out.println("取得用戶: " + user))
-                    .doOnError(error -> System.err.println("取得用戶失敗: " + error.getMessage()));
-
-            hoverfly.exportSimulation(Paths.get("some-path/simulation.json"));
-        }
         return graphQlClient
                 .document(query)
                 .variables(variables)
