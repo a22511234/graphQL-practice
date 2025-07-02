@@ -1,5 +1,12 @@
 package com.example.graphqlpracticeclient;
 
+import com.example.graphqlpracticeclient.client.UserGraphQLQuery;
+import com.example.graphqlpracticeclient.client.UserProjectionRoot;
+import com.example.graphqlpracticeclient.client.UsersGraphQLQuery;
+import com.example.graphqlpracticeclient.client.UsersProjectionRoot;
+import com.netflix.graphql.dgs.client.codegen.GraphQLQuery;
+import com.netflix.graphql.dgs.client.codegen.GraphQLQueryRequest;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import com.example.graphqlpracticeclient.DTO.UserDTO;
@@ -25,9 +32,9 @@ public class GraphQLClientService {
      * 取得所有用戶
      */
     public Mono<List<UserDTO>> getAllUsers() {
-
+        GraphQLQueryRequest graphQLQueryRequest = new GraphQLQueryRequest(UsersGraphQLQuery.newRequest().build(), new UsersProjectionRoot().name().id().email().phone());
         return graphQlClient
-                .document(GraphQLQueries.GET_ALL_USERS)
+                .document(graphQLQueryRequest.serialize())
                 .retrieve("users")
                 .toEntityList(UserDTO.class)
                 .doOnNext(users -> System.out.println("取得 " + users.size() + " 個用戶"))
@@ -59,6 +66,8 @@ public class GraphQLClientService {
                 }
                 """;
         Map<String, Object> variables = Map.of("id", id);
+        GraphQLQueryRequest graphQLQueryRequest = new GraphQLQueryRequest(UserGraphQLQuery.newRequest().id(id).build(), new UserProjectionRoot().id().email().phone().name());
+        System.out.println("Query: " + graphQLQueryRequest.serialize());
         return graphQlClient
                 .document(query)
                 .variables(variables)

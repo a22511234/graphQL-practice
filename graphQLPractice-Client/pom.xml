@@ -83,7 +83,11 @@
             <classifier>osx-aarch_64</classifier>
             <scope>runtime</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.netflix.graphql.dgs.codegen</groupId>
+            <artifactId>graphql-dgs-codegen-client-core</artifactId>
+            <version>5.1.17</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -91,6 +95,48 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.github.deweyjose</groupId>
+                <artifactId>graphqlcodegen-maven-plugin</artifactId>
+                <version>1.24</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <addGeneratedAnnotation>true</addGeneratedAnnotation>
+                    <packageName>com.example.graphqlpracticeclient</packageName>
+                    <generateBoxedTypes>true</generateBoxedTypes>
+                    <generateClient>true</generateClient>
+                    <schemaPaths>
+                        <param>src/main/resources/schema/schema.graphqls</param>
+                    </schemaPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
